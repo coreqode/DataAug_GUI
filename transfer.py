@@ -215,7 +215,7 @@ def main(h, b, c, d):
     config.output = './outputs'
     config.image_size = int(512)
     config.alpha = 1
-    config.option_unpool = 'sum'
+    config.option_unpool = 'cat5'
     config.e, config.d, config.s, config.a = True, True, True, True
     config.transfer_at_encoder, config.transfer_at_decoder, config.transfer_at_skip, config.transfer_all = True, True, True, True
     config.cpu = True
