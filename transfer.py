@@ -189,7 +189,7 @@ def run_bulk(config):
 
 
 # if __name__ == '__main__':
-def main(h, b, c, d):
+def main(image_size, cpu, unpool, e, d, s, a, alpha):
     path = os.getcwd()
     sys.path.append(path)
     parser = argparse.ArgumentParser()
@@ -208,17 +208,17 @@ def main(h, b, c, d):
     # parser.add_argument('--cpu', action='store_true')
     # parser.add_argument('--verbose', action='store_true')
     config = parser.parse_args()
-    config.content = path + '/DataAug_GUI/DataAugOutputs/style_images'
-    config.content_segment = path + '/DataAug_GUI/DataAugOutputs/style_masks'
-    config.style = path + '/DataAug_GUI/DataAugOutputs/target_images'
-    config.style_segment = path + '/DataAug_GUI/DataAugOutputs/target_masks'
-    config.output = path + '/DataAug_GUI/DataAugOutputs/outputs'
-    config.image_size = int(512)
-    config.alpha = 1
-    config.option_unpool = 'cat5'
-    config.e, config.d, config.s, config.a = True, True, True, True
+    config.content = path + '/input_dataset/target_images'
+    config.content_segment = path + '/input_dataset/target_masks'
+    config.style = path + '/input_dataset/style_images'
+    config.style_segment = path + '/input_dataset/style_masks'
+    config.output = path + '/input_dataset/outputs'
+    config.image_size = int(image_size)
+    config.alpha = float(alpha)
+    config.option_unpool = unpool
+    config.e, config.d, config.s, config.a = e,d,s,a
     config.transfer_at_encoder, config.transfer_at_decoder, config.transfer_at_skip, config.transfer_all = config.e, config.d, config.s, config.a
-    config.cpu = True
+    config.cpu = cpu
     config.verbose = True
 
     print(config)

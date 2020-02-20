@@ -46,8 +46,6 @@ class MainWindow(QDialog):
         self.useStylePaletteCheckBox.setChecked(True)
 
         disableWidgetsCheckBox = QCheckBox("&Disable widgets")
-        generate_folder = QPushButton("Generate Folders")
-        generate_folder.clicked.connect(lambda: self.generate_folder())
 
         self.createTopLeftGroupBox()
         self.createTopRightGroupBox()
@@ -63,7 +61,6 @@ class MainWindow(QDialog):
 
         topLayout = QHBoxLayout()
         topLayout.addStretch(1)
-        topLayout.addWidget(generate_folder)
         topLayout.addWidget(disableWidgetsCheckBox)
 
 
@@ -78,15 +75,6 @@ class MainWindow(QDialog):
         mainLayout.setColumnStretch(1, 1)
         self.setLayout(mainLayout)
         self.setWindowTitle("DataAug Tool")
-
-    def generate_folder(self):
-        directory = os.getcwd()
-        path = directory + '/DataAugOutputs'
-        os.mkdir(os.path.join(directory, 'DataAugOutputs'))
-        os.mkdir(os.path.join(path, 'target_image'))
-        os.mkdir(os.path.join(path, 'target_masks'))
-        os.mkdir(os.path.join(path, 'style_image'))
-        os.mkdir(os.path.join(path, 'style_masks'))
     
     def folder_picker(self, string):
         filename = QFileDialog.getExistingDirectory(self, 'Pick Folder Path')
@@ -106,60 +94,55 @@ class MainWindow(QDialog):
 
 
     def runScript(self, use_cpu, image_size, alpha,e, d, s, a, unpooling ):
-        print(use_cpu)
-        print(image_size)
-        print(alpha)
-        print(e, d, s, a)
-        print(unpooling)
-
-        # transfer.main(self.value1, self.value2, self.value3, self.value4)
+        self.image_size = image_size
+        self.cpu = use_cpu
+        self.unpool= unpooling
+        self.e = e
+        self.d = d
+        self.s = s
+        self.a = a
+        self.alpha = alpha
+        transfer.main(self.image_size, self.cpu, self.unpool, self.e, self.d, self.s, self.a, self.alpha)
     
     def preparedDataset(self, string):
         path = os.getcwd()
         if string == "Fog1":
-            self.style_image_path = path + "/styles/images/fog1.png"
-            self.style_mask_path = path + "/styles/masks/fog1.png"
+            self.style_image_path = path + "/styles/images/fog/0.png"
+            self.style_mask_path = path + "/styles/masks/fog/0.png"
+        elif string == "Fog2":
+            self.style_image_path = path + "/styles/images/fog/2.png"
+            self.style_mask_path = path + "/styles/masks/fog/2.png"
+        elif string == "Fog3":
+            self.style_image_path = path + "/styles/images/fog/5.png"
+            self.style_mask_path = path + "/styles/masks/fog/5.png"
         elif string == 'Snow1':
-            self.style_image_path = path + "/styles/images/fog1.png"
-            self.style_mask_path = path + "/styles/masks/fog1.png"
+            self.style_image_path = path + "/styles/images/snowy/0.png"
+            self.style_mask_path = path + "/styles/masks/snowy/0.png"
+        elif string == 'Snow2':
+            self.style_image_path = path + "/styles/images/snowy/2.png"
+            self.style_mask_path = path + "/styles/masks/snowy/2.png"
+        elif string == 'Snow3':
+            self.style_image_path = path + "/styles/images/snowy/5.png"
+            self.style_mask_path = path + "/styles/masks/snowy/5.png"
+        elif string == 'Shadow':
+            self.style_image_path = path + "/styles/images/shadow/1.png"
+            self.style_mask_path = path + "/styles/masks/shadow/1.png"
+        elif string == 'Night':
+            self.style_image_path = path + "/styles/images/night/2.png"
+            self.style_mask_path = path + "/styles/masks/night/2.png"
+        elif string == 'Dusk':
+            self.style_image_path = path + "/styles/images/dusk/0.png"
+            self.style_mask_path = path + "/styles/masks/dusk/0.png"
 
-        jpg_to_png(self.image_path, self.mask_path, self.dest_path, self.style_image_path, self.style_mask_path)
+
+        jpg_to_png(self.image_path, self.mask_path, self.dest_path, self.style_image_path, self.style_mask_path, string)
 
 
     def createTopLeftGroupBox(self):
-################# CUSTOM #######################################
-        # self.custom = QGroupBox()
-        # pushButton1 = QPushButton("Target Image folder path")
-        # pushButton2 = QPushButton("Target Image masks folder path")
-        # pushButton3 = QPushButton("Style Image folder path")
-        # pushButton4 = QPushButton("Style Image masks folder path")
-        # pushButton5 = QPushButton("Output Folder")
-        # layout = QVBoxLayout()
-        # layout.addWidget(pushButton1)
-        # layout.addWidget(pushButton2)
-        # layout.addWidget(pushButton3)
-        # layout.addWidget(pushButton4)
-        # layout.addWidget(pushButton5)
-        # pushButton1.clicked.connect(
-        #     lambda: self.folder_picker(pushButton1.text()))
-        # pushButton2.clicked.connect(
-        #     lambda: self.folder_picker(pushButton2.text()))
-        # pushButton3.clicked.connect(
-        #     lambda: self.folder_picker(pushButton3.text()))
-        # pushButton4.clicked.connect(
-        #     lambda: self.folder_picker(pushButton4.text()))
-        # pushButton5.clicked.connect(
-        #     lambda: self.folder_picker(pushButton5.text()))
-
-
-        # self.custom.setLayout(layout)
-
-###################################### SNOW ###########################
         self.prepare_dataset = QGroupBox("PREPARE DATASET")
 
         self.customCheck = QCheckBox('Custom')
 
-        
         self.pushButton1 = QPushButton("Image Directory")
         self.pushButton2 = QPushButton("Masks Directory")
         self.pushButton3 = QPushButton("Style Image Path")
@@ -172,7 +155,15 @@ class MainWindow(QDialog):
         prepareDataset.setStyleSheet("background-color: grey")
         comboBox = QComboBox()
         comboBox.addItem('Fog1')
-        comboBox.addItem('Snow')
+        comboBox.addItem('Fog2')
+        comboBox.addItem('Fog3')
+        comboBox.addItem('Dusk')
+        comboBox.addItem('Snow1')
+        comboBox.addItem('Snow2')
+        comboBox.addItem('Snow3')
+        comboBox.addItem('Shadow')
+        comboBox.addItem('Night')
+
 
         layout =QVBoxLayout()
         layout_H = QHBoxLayout()
@@ -188,11 +179,6 @@ class MainWindow(QDialog):
         layout.addWidget(self.pushButton5)
         layout.addWidget(prepareDataset)
 
-
-
-
-
-
         self.pushButton1.clicked.connect(
             lambda: self.folder_picker(self.pushButton1.text()))
         self.pushButton2.clicked.connect(
@@ -203,13 +189,10 @@ class MainWindow(QDialog):
             lambda: self.file_picker(self.pushButton4.text()))        
         self.pushButton5.clicked.connect(
             lambda: self.folder_picker(self.pushButton5.text()))        
-        # try:
+
         prepareDataset.clicked.connect(
             lambda: self.preparedDataset(comboBox.currentText()))  
-        # except:
-        #     prepareDataset.clicked.connect(
-        #         lambda: self.preparedDataset())  
-        
+
         self.customCheck.toggled.connect(self.pushButton3.setEnabled)
         self.customCheck.toggled.connect(self.pushButton4.setEnabled)
         self.customCheck.toggled.connect(text.setDisabled)
@@ -241,15 +224,14 @@ class MainWindow(QDialog):
         self.controls = QGroupBox("CONTROLS")
 
         use_cpu = QCheckBox('CPU')
-        use_cpu.setChecked(True)
         e = QCheckBox('e')
         e.setChecked(True)
         d = QCheckBox('d')
         s = QCheckBox('s')
         a = QCheckBox('a')
         comboBox1 = QComboBox()
-        comboBox1.addItem('SUM')
-        comboBox1.addItem('CAT5')
+        comboBox1.addItem('sum')
+        comboBox1.addItem('cat5')
         text1 = QLabel('Choose the unpooling options:')
         text2 = QLabel('Image Size:')
         text3 = QLabel('alpha:')
@@ -286,7 +268,7 @@ class MainWindow(QDialog):
         runScript.clicked.connect(lambda: self.runScript(
             use_cpu.isChecked(), text_box1.text(), text_box2.text(),
             e.isChecked(), d.isChecked(), s.isChecked(), a.isChecked(),
-            comboBox1.currentText(),))
+            comboBox1.currentText()))
 
         self.controls.setLayout(layout)
     

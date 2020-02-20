@@ -6,7 +6,7 @@ import argparse
 import shutil
 from PIL import Image
 
-def jpg_to_png(image_path, mask_path, dest_path, style_image_path, style_mask_path):
+def jpg_to_png(image_path, mask_path, dest_path, style_image_path, style_mask_path, string):
         print(image_path)
         print(mask_path)
         print(dest_path)
@@ -19,6 +19,8 @@ def jpg_to_png(image_path, mask_path, dest_path, style_image_path, style_mask_pa
         os.mkdir(os.path.join(dest_path, 'target_masks'))
         os.mkdir(os.path.join(dest_path, 'style_images'))
         os.mkdir(os.path.join(dest_path, 'style_masks'))
+        os.mkdir(os.path.join(dest_path, 'output'))
+        os.mkdir(os.path.join(dest_path + '/output', string))
         imageNames = []
         for image in images_path:
                 imageName = image.split('/')[-1].split(".")[0]
