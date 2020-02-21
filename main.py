@@ -50,12 +50,15 @@ class MainWindow(QDialog):
         self.createTopLeftGroupBox()
         self.createTopRightGroupBox()
         self.createBottomLeftGroupBox()
+        self.createBottomRightGroupBox()
         disableWidgetsCheckBox.toggled.connect(
             self.prepare_dataset.setDisabled)
         disableWidgetsCheckBox.toggled.connect(
             self.instructions.setDisabled)
         disableWidgetsCheckBox.toggled.connect(
             self.controls.setDisabled)
+        disableWidgetsCheckBox.toggled.connect(
+            self.instructions2.setDisabled)
         
 
 
@@ -69,6 +72,7 @@ class MainWindow(QDialog):
         mainLayout.addWidget(self.prepare_dataset, 1, 0)
         mainLayout.addWidget(self.instructions, 1, 1)
         mainLayout.addWidget(self.controls, 2,0 )
+        mainLayout.addWidget(self.instructions2, 2,1 )
         mainLayout.setRowStretch(1, 1)
         mainLayout.setRowStretch(2, 1)
         mainLayout.setColumnStretch(0, 1)
@@ -202,22 +206,27 @@ class MainWindow(QDialog):
 
     def createTopRightGroupBox(self):
         self.instructions = QGroupBox("INTRUCTIONS")
+        text_label1 = QLabel("1. The model needs target image,\n"
+        "    target mask, style image and style\n"
+        "    mask for using the style transfer.\n"
+        "                                  \n"
+        "2.  You can choose few predefined\n"
+        "     styles from the dropdown menu.\n"
+        "                                 \n"
+        "3.  Check the custom button to chose\n"
+        "     your own style.\n"
+        "                                   \n"
+        "4.  Choose the destination directory\n"
+        "     and prepare the dataset.\n"
+        "                                   \n"
+        "5.  Check the CPU button for using it\n"
+        )
+        # text_label1.setStyleSheet("font: 4pt Comic Sans MS")
 
-        defaultPushButton = QPushButton("Default Push Button")
-        defaultPushButton.setDefault(True)
 
-        togglePushButton = QPushButton("Toggle Push Button")
-        togglePushButton.setCheckable(True)
-        togglePushButton.setChecked(True)
-
-        flatPushButton = QPushButton("Flat Push Button")
-        flatPushButton.setFlat(True)
-
+        text_label1.setAlignment(Qt.AlignJustify)
         layout = QVBoxLayout()
-        # layout.addWidget(defaultPushButton)
-        # layout.addWidget(togglePushButton)
-        # layout.addWidget(flatPushButton)
-        # layout.addStretch(1)
+        layout.addWidget(text_label1)
         self.instructions.setLayout(layout)
     
     def createBottomLeftGroupBox(self):
@@ -272,6 +281,31 @@ class MainWindow(QDialog):
 
         self.controls.setLayout(layout)
     
+
+
+    def createBottomRightGroupBox(self):
+            self.instructions2 = QGroupBox()
+            text_label1 = QLabel(
+        "6.  e: style transfer at encoder\n"
+        "     d: Style transfer at decoder\n"
+        "     s: Style transfer at sumation\n"
+        "     a: All images\n"
+        "                                   \n"
+        "7.  sum: Summation of skip connection\n"
+        "     cat5: Concatenation\n"
+        "                                   \n"
+        "8.  Choose the image size of output\n"
+        "                                   \n"
+        "9.  Choose the blending ratio alpha\n"
+        "                                   \n"
+        "10. Run Script and Enjoy :)"
+        )
+
+            text_label1.setAlignment(Qt.AlignJustify)
+            layout = QVBoxLayout()
+            layout.addWidget(text_label1)
+            self.instructions2.setLayout(layout)
+
 
 
 if __name__ == '__main__':
